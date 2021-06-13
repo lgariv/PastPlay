@@ -15,8 +15,10 @@ class Detector: NSObject, ObservableObject, SHSessionDelegate {
     private var audioEngine = AVAudioEngine()
     
     private lazy var session = SHSession()
-    
+    private lazy var signature = SHSignature()
+
     func getMatch(videoURL: URL) -> Void {
+        session.match(signature)
     }
     
     func convertBuffer(sampleBuffer: CMSampleBuffer) -> AVAudioPCMBuffer {
@@ -72,11 +74,16 @@ class Detector: NSObject, ObservableObject, SHSessionDelegate {
             reader.add(output)
         }
         reader.startReading()
-        let audioBuffer = output.copyNextSampleBuffer()
-        let buffer = convertBuffer(sampleBuffer: audioBuffer!)
-        
-        try? signatureGenerator.append(buffer, at: nil)
-        let signature = signatureGenerator.signature()
+        while true {
+            if let audioBuffer = output.copyNextSampleBuffer() {
+                let buffer = convertBuffer(sampleBuffer: audioBuffer)
+                if signatureGenerator.signature().duration > 11.0 { break } else {
+                    try? signatureGenerator.append(buffer, at: nil)
+                }
+            } else { break }
+        }
+
+        signature = signatureGenerator.signature()
         
         session.match(signature)
         
@@ -84,8 +91,8 @@ class Detector: NSObject, ObservableObject, SHSessionDelegate {
         print("matching audioAssetTrack: \(audioAssetTrack)")
         print("matching reader: \(reader)")
         print("matching output: \(output)")
-        print("matching audioBuffer: \(String(describing: audioBuffer))")
-        print("matching buffer: \(buffer)")
+//        print("matching audioBuffer: \(String(describing: audioBuffer))")
+//        print("matching buffer: \(buffer)")
         print("matching signatureGenerator: \(signatureGenerator)")
         print("matching signature: \(signature)")
     }
@@ -94,6 +101,14 @@ class Detector: NSObject, ObservableObject, SHSessionDelegate {
         DispatchQueue.main.async {
             self.result = match
             print("match: \(match.mediaItems.first!.songs.first!.artistName)")
+        }
+    }
+    
+    func session(_ session: SHSession,
+       didNotFindMatchFor signature: SHSignature,
+                 error: Error?) {
+        DispatchQueue.main.async {
+            print("match error: \(String(describing: error))")
         }
     }
 }

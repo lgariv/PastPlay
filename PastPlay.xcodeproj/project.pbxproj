@@ -19,6 +19,7 @@
 		E936A18726750E3400810769 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E936A17626750E3400810769 /* Assets.xcassets */; };
 		E98F5F8E267602920086CA6B /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98F5F8D267602920086CA6B /* PlayerView.swift */; };
 		E98F5F8F267602920086CA6B /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98F5F8D267602920086CA6B /* PlayerView.swift */; };
+		E9B7F63D26766D4B00834311 /* ShazamKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9B7F63B26766D4800834311 /* ShazamKit.framework */; };
 		E9F9C4602675426700636306 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9F9C45F2675426700636306 /* AudioToolbox.framework */; };
 /* End PBXBuildFile section */
 
@@ -31,6 +32,7 @@
 		E936A17B26750E3400810769 /* PastPlay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PastPlay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E936A18126750E3400810769 /* PastPlay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PastPlay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E98F5F8D267602920086CA6B /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
+		E9B7F63B26766D4800834311 /* ShazamKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ShazamKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.0.sdk/System/Library/Frameworks/ShazamKit.framework; sourceTree = DEVELOPER_DIR; };
 		E9F9C45F2675426700636306 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.0.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
@@ -40,6 +42,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E9F9C4602675426700636306 /* AudioToolbox.framework in Frameworks */,
+				E9B7F63D26766D4B00834311 /* ShazamKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,6 +90,7 @@
 		E9F9C45E2675426700636306 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E9B7F63B26766D4800834311 /* ShazamKit.framework */,
 				E9F9C45F2675426700636306 /* AudioToolbox.framework */,
 			);
 			name = Frameworks;
@@ -338,9 +342,10 @@
 				INFOPLIST_KEY_CFBundleExecutable = PastPlay;
 				INFOPLIST_KEY_CFBundleName = PastPlay;
 				INFOPLIST_KEY_CFBundleVersion = 1;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -372,9 +377,10 @@
 				INFOPLIST_KEY_CFBundleExecutable = PastPlay;
 				INFOPLIST_KEY_CFBundleName = PastPlay;
 				INFOPLIST_KEY_CFBundleVersion = 1;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;

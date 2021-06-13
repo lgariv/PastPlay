@@ -17,7 +17,8 @@ struct ContentView: View {
     @State private var begin = false
     @State private var finished = false
     @State private var videoExists = false
-    @State var detector = Detector()
+
+    @StateObject private var detector = Detector()
 
     var body: some View {
         ZStack {
@@ -87,7 +88,6 @@ struct ContentView: View {
             }
         }
         .onChange(of: videoURL) { newValue in
-            self.detector = Detector()
             guard let videoURL = newValue else {
                 print("no URL")
                 return
