@@ -16,6 +16,7 @@ struct ContentView: View {
     @State private var videoURL = URL(string: "")
     @State private var begin = false
     @State private var finished = false
+    @State var videoExists = false
 
     var body: some View {
         ZStack {
@@ -23,15 +24,18 @@ struct ContentView: View {
 //            PlayerViewController(videoURL: self.videoURL)
                 .onAppear() {
                     // Start the player going, otherwise controls don't appear
+                    videoExists = true
                     video.play()
                 }
                 .onDisappear() {
                     // Stop the player when the view disappears
+                    videoExists = false
                     video.pause()
                 }
+                .opacity(videoExists ? 1 : 0)
                 .frame(minWidth: 0, maxWidth: .infinity)
                 .edgesIgnoringSafeArea(.all)
-            
+
             VStack {
                 if videoURL == nil || videoURL?.absoluteString == "" {} else {
                     HStack {
@@ -40,6 +44,7 @@ struct ContentView: View {
                         Button(action: {
                             video = AVPlayer()
                             videoURL = URL(string: "")
+                            videoExists = false
                         }) {
                             Image(systemName: "trash")
                                 .font(.system(size: 24))
