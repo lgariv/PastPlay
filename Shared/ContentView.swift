@@ -16,12 +16,13 @@ struct ContentView: View {
     @State private var videoURL = URL(string: "")
     @State private var begin = false
     @State private var finished = false
-    @State var videoExists = false
+    @State private var videoExists = false
+    @State var detector = Detector()
 
     var body: some View {
         ZStack {
-            PlayerViewController(player: self.video)
-//            PlayerViewController(videoURL: self.videoURL)
+//            PlayerViewController(player: self.video)
+            PlayerViewController(videoURL: self.videoURL)
                 .onAppear() {
                     // Start the player going, otherwise controls don't appear
                     videoExists = true
@@ -29,10 +30,10 @@ struct ContentView: View {
                 }
                 .onDisappear() {
                     // Stop the player when the view disappears
-                    videoExists = false
+//                    videoExists = false
                     video.pause()
                 }
-                .opacity(videoExists ? 1 : 0)
+//                .opacity(videoExists ? 1 : 0)
                 .frame(minWidth: 0, maxWidth: .infinity)
                 .edgesIgnoringSafeArea(.all)
 
@@ -85,11 +86,21 @@ struct ContentView: View {
             }
             }
         }
+        .onChange(of: videoURL) { newValue in
+            self.detector = Detector()
+            guard let videoURL = newValue else {
+                print("no URL")
+                return
+            }
+            self.detector.lookForMatch(videoURL: videoURL)
+        }
         .sheet(isPresented: $isShowPhotoLibrary) {
             VideoPicker(selectedVideo: $video, selectedVideoURL: $videoURL, sourceType: .photoLibrary)
         }
         .sheet(isPresented: $shouldShowIdentificationResult) {
+//            IdentificationResult(detector: self.detector)
             IdentificationResult()
+                .environmentObject(self.detector)
         }
     }
 }

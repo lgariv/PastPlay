@@ -20,7 +20,7 @@ struct VideoPicker: UIViewControllerRepresentable {
     }
     
     var sourceType: UIImagePickerController.SourceType = .photoLibrary
-    
+
     func makeUIViewController(context: UIViewControllerRepresentableContext<VideoPicker>) -> UIImagePickerController {
         
         let videoPicker = UIImagePickerController()
