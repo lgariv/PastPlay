@@ -18,7 +18,8 @@ struct ContentView: View {
     @State private var finished = false
     @State private var videoExists = false
 
-    @StateObject private var detector = Detector()
+    @StateObject private var matcher = Matcher()
+    @State private var matchFound = false
 
     var body: some View {
         ZStack {
@@ -31,7 +32,7 @@ struct ContentView: View {
                 }
                 .onDisappear() {
                     // Stop the player when the view disappears
-//                    videoExists = false
+                    videoExists = false
                     video.pause()
                 }
 //                .opacity(videoExists ? 1 : 0)
@@ -84,23 +85,29 @@ struct ContentView: View {
                     .foregroundColor(.white)
                     .cornerRadius(8)
                     .padding(.all)
-            }
+                }
             }
         }
-        .onChange(of: videoURL) { newValue in
-            guard let videoURL = newValue else {
-                print("no URL")
+        .onChange(of: shouldShowIdentificationResult) { newValue in
+            guard newValue == true else {
                 return
             }
-            self.detector.lookForMatch(videoURL: videoURL)
+            self.matcher.lookForMatch(videoURL: videoURL!)
+        }
+        .onChange(of: matcher.result) { newResult in
+            guard newResult != nil else {
+                print("found no match")
+                return
+            }
+            print("found match")
+            self.matchFound = true
         }
         .sheet(isPresented: $isShowPhotoLibrary) {
             VideoPicker(selectedVideo: $video, selectedVideoURL: $videoURL, sourceType: .photoLibrary)
         }
         .sheet(isPresented: $shouldShowIdentificationResult) {
-//            IdentificationResult(detector: self.detector)
-            IdentificationResult()
-                .environmentObject(self.detector)
+            IdentificationResult(matchFound: $matchFound)
+                .environmentObject(self.matcher)
         }
     }
 }

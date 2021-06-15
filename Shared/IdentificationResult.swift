@@ -8,8 +8,9 @@
 import SwiftUI
 import AVKit
 import ShazamKit
+import MusicKit
 
-class Detector: NSObject, ObservableObject, SHSessionDelegate {
+class Matcher: NSObject, ObservableObject, SHSessionDelegate {
     @Published var result: SHMatch? = nil
 
     private var audioEngine = AVAudioEngine()
@@ -47,7 +48,7 @@ class Detector: NSObject, ObservableObject, SHSessionDelegate {
         return pcmBuffer
     }
     
-    func lookForMatch(videoURL: URL) {
+    func lookForMatch(videoURL: URL) -> Void {
         // The session is what we use to recognize what's playing.
         session = SHSession()
         // The delegate will receive callbacks when the media is recognized.
@@ -56,45 +57,40 @@ class Detector: NSObject, ObservableObject, SHSessionDelegate {
         let signatureGenerator = SHSignatureGenerator()
         
         let asset = AVURLAsset(url: videoURL)
-        guard let audioAssetTrack = asset.tracks(withMediaType: AVMediaType.audio).first else {
-            print("audioAssetTrack")
-            return
-        }
-        guard let reader = try? AVAssetReader(asset: asset) else {
-            print("reader")
-            return
-        }
+        let reader = try! AVAssetReader(asset: asset)
+        let audioAssetTrack = asset.tracks(withMediaType: AVMediaType.audio).first
         let audioReadSetting: [String: Any] = [AVFormatIDKey: kAudioFormatLinearPCM]
-        guard let output = try? AVAssetReaderTrackOutput(track: audioAssetTrack, outputSettings: audioReadSetting) else {
-            print("output")
-            return
-        }
-        if reader.canAdd(output) {
-            print("canAdd(\(output))")
-            reader.add(output)
-        }
+        let output = AVAssetReaderTrackOutput(track: audioAssetTrack!, outputSettings: audioReadSetting)
+        if reader.canAdd(output) { reader.add(output) }
+        
         reader.startReading()
-        while true {
-            if let audioBuffer = output.copyNextSampleBuffer() {
-                let buffer = convertBuffer(sampleBuffer: audioBuffer)
-                if signatureGenerator.signature().duration > 11.0 { break } else {
-                    try? signatureGenerator.append(buffer, at: nil)
-                }
-            } else { break }
+
+        var totalBufferDuration = TimeInterval(0)
+        while let audioBuffer = output.copyNextSampleBuffer() {
+            let buffer = convertBuffer(sampleBuffer: audioBuffer)
+            var bufferDuration: TimeInterval {
+                let framecount = Double(buffer.frameLength)
+                let samplerate = buffer.format.sampleRate
+                print("time is : \(totalBufferDuration)")
+                return TimeInterval(framecount / samplerate)
+            }
+            totalBufferDuration = totalBufferDuration + bufferDuration
+            if totalBufferDuration >= 12.0 { break } else {
+                try? signatureGenerator.append(buffer, at: nil)
+            }
         }
 
         signature = signatureGenerator.signature()
-        
         session.match(signature)
-        
-        print("matching session: \(session)")
-        print("matching audioAssetTrack: \(audioAssetTrack)")
-        print("matching reader: \(reader)")
-        print("matching output: \(output)")
-//        print("matching audioBuffer: \(String(describing: audioBuffer))")
-//        print("matching buffer: \(buffer)")
-        print("matching signatureGenerator: \(signatureGenerator)")
-        print("matching signature: \(signature)")
+
+//        print("matching session: \(session)")
+//        print("matching audioAssetTrack: \(audioAssetTrack)")
+//        print("matching reader: \(reader)")
+//        print("matching output: \(output)")
+////        print("matching audioBuffer: \(String(describing: audioBuffer))")
+////        print("matching buffer: \(buffer)")
+//        print("matching signatureGenerator: \(signatureGenerator)")
+//        print("matching signature: \(signature)")
     }
 
     func session(_ session: SHSession, didFind match: SHMatch) {
@@ -114,20 +110,60 @@ class Detector: NSObject, ObservableObject, SHSessionDelegate {
 }
 
 struct IdentificationResult: View {
-    @State var match: SHMatch?
-    @EnvironmentObject var detector: Detector
+    @Binding var matchFound: Bool
+    @EnvironmentObject var matcher: Matcher
     
     var body: some View {
-        if let result = detector.result {
-            Text("\(result.mediaItems.first!.songs.first!.artistName)")
-                .onAppear(perform: {
-                    match = detector.result
+        if let Match = matcher.result?.mediaItems.first {
+            ArtworkImage(Match.songs.first!.artwork!, width: Int(UIScreen.main.bounds.size.width))
+                .aspectRatio(contentMode: .fit)
+                .padding()
+                .cornerRadius(8)
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("\(Match.songs.first!.title)")
+                        .font(.title)
+                        .bold()
+                    Text("\(Match.songs.first!.artistName)")
+                        .foregroundColor(.secondary)
+                }
+                
+                Spacer()
+                
+                Button(action: {
+                    SHMediaLibrary.default.add([Match]) {error in
+                        if error != nil {
+                            // handle the error
+                        }
+                    }
+                }, label: {
+                    Image(systemName: "plus")
+                        .font(.system(size: 24))
                 })
+            }
+            .padding(.horizontal)
+            
+            Spacer()
         } else {
-            Text("Hello, World!")
-                .onAppear(perform: {
-                    match = detector.result
-                })
+            Image(systemName: "photo.fill")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .padding()
+                .cornerRadius(8)
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("No Song Detected")
+                        .font(.title)
+                        .bold()
+                    Text("Artist")
+                        .foregroundColor(.secondary)
+                }
+                
+                Spacer()
+            }
+            .padding(.horizontal)
+            
+            Spacer()
         }
     }
 }
