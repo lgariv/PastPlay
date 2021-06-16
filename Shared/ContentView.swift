@@ -27,22 +27,21 @@ struct ContentView: View {
 
     @State private var videoSize: CGSize = UIScreen.main.bounds.size
 
-    fileprivate func extractedFunc() -> some View {
-        return NewVideoPlayer(url: self.videoURL, play: $play, time: $time)
-            .autoReplay(true)
-            .aspectRatio(CGSize(width: videoSize.width, height: videoSize.height), contentMode: .fill)
-            .edgesIgnoringSafeArea(.all)
-            .onChange(of: videoURL) { newVideo in
-                if newVideo?.absoluteString != "https://" {
-                    print("videoSize:: \(self.videoSize)")
-                }
-            }
-    }
-    
     var body: some View {
         ZStack {
-            extractedFunc()
-
+            Text("Please choose a video to start.")
+                .font(.subheadline)
+                .foregroundColor(.gray)
+            
+            NewVideoPlayer(url: self.videoURL, play: $play, time: $time)
+                .autoReplay(true)
+                .aspectRatio(CGSize(width: videoSize.width, height: videoSize.height), contentMode: .fill)
+                .edgesIgnoringSafeArea(.all)
+                .onChange(of: videoURL) { newVideo in
+                    if newVideo?.absoluteString != "https://" {
+                        print("videoSize:: \(self.videoSize)")
+                    }
+                }
             VStack {
                 if videoURL == nil || videoURL?.absoluteString == "https://" {} else {
                     HStack {
