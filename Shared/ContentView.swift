@@ -24,18 +24,19 @@ struct ContentView: View {
     var body: some View {
         ZStack {
 //            PlayerViewController(player: self.video)
-            PlayerViewController(videoURL: self.videoURL)
+//            PlayerViewController(videoURL: self.videoURL)
+            PlayerViewController(player: self.video, videoURL: self.videoURL)
                 .onAppear() {
                     // Start the player going, otherwise controls don't appear
-                    videoExists = true
+//                    videoExists = true
                     video.play()
                 }
                 .onDisappear() {
                     // Stop the player when the view disappears
-                    videoExists = false
+//                    videoExists = false
                     video.pause()
                 }
-//                .opacity(videoExists ? 1 : 0)
+                .opacity(videoExists == true ? 1 : 0)
                 .frame(minWidth: 0, maxWidth: .infinity)
                 .edgesIgnoringSafeArea(.all)
 
@@ -48,6 +49,7 @@ struct ContentView: View {
                             video = AVPlayer()
                             videoURL = URL(string: "")
                             videoExists = false
+                            print("Video Exist:: false")
                         }) {
                             Image(systemName: "trash")
                                 .font(.system(size: 24))
@@ -88,10 +90,18 @@ struct ContentView: View {
                 }
             }
         }
-        .onChange(of: shouldShowIdentificationResult) { newValue in
-            guard newValue == true else {
-                return
+        .onChange(of: videoURL) { newVideo in
+            guard let newVideo = newVideo else { return }
+            if newVideo.absoluteString != "" {
+                videoExists = true
+                print("Video Exist:: true")
+            } else {
+                videoExists = false
+                print("Video Exist:: false")
             }
+        }
+        .onChange(of: shouldShowIdentificationResult) { newValue in
+            guard newValue == true else { return }
             self.matcher.lookForMatch(videoURL: videoURL!)
         }
         .onChange(of: matcher.result) { newResult in

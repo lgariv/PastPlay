@@ -47,3 +47,9 @@ struct PlayerViewController: UIViewControllerRepresentable {
         controller.player?.play()
     }
 }
+
+extension AVPlayer {
+    var isVideoAvailable: Bool {
+        return self.currentItem?.tracks.filter({$0.assetTrack!.mediaType == AVMediaType.video}).count != 0
+    }
+}

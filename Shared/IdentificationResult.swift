@@ -170,6 +170,6 @@ struct IdentificationResult: View {
 
 //struct IdentificationResult_Previews: PreviewProvider {
 //    static var previews: some View {
-//        IdentificationResult()
+//        IdentificationResult(matchFound: $fakeMatchFound)
 //    }
 //}
