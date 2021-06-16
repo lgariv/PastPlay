@@ -13,6 +13,7 @@ import AVKit
 struct VideoPicker: UIViewControllerRepresentable {
     @Binding var selectedVideo: AVPlayer
     @Binding var selectedVideoURL: URL?
+    @Binding var naturalSize: CGSize
     @Environment(\.presentationMode) private var presentationMode
     
     func makeCoordinator() -> Coordinator {
@@ -49,19 +50,19 @@ struct VideoPicker: UIViewControllerRepresentable {
         
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             
+//            guard let movieUrl = info[.mediaURL] as? URL else { return }
             guard let movieUrl = info[.mediaURL] as? URL else { return }
+
+            let videoAsset = AVURLAsset(url : movieUrl)
+            let videoAssetTrack = videoAsset.tracks(withMediaType: .video).first!
+            var naturalSize = videoAssetTrack.naturalSize.applying(videoAssetTrack.preferredTransform)
+            let width = abs(naturalSize.width)
+            let height = abs(naturalSize.height)
+            naturalSize = CGSize(width: width, height: height)
+
             parent.selectedVideoURL = movieUrl
             parent.selectedVideo = AVPlayer(url: parent.selectedVideoURL!)
-
-//            let composition = AVMutableComposition()
-//            do {
-//                let asset = AVURLAsset(url: movieUrl)
-//                guard let audioAssetTrack = asset.tracks(withMediaType: AVMediaType.audio).first else { return }
-//                guard let audioCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid) else { return }
-//                try audioCompositionTrack.insertTimeRange(audioAssetTrack.timeRange, of: audioAssetTrack, at: CMTime.zero)
-//            } catch {
-//                print(error)
-//            }
+            parent.naturalSize = naturalSize
 
             parent.presentationMode.wrappedValue.dismiss()
         }

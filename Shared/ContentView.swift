@@ -7,13 +7,14 @@
 
 import SwiftUI
 import AVKit
+import VideoPlayerView
 
 struct ContentView: View {
     
     @State private var isShowPhotoLibrary = false
     @State private var shouldShowIdentificationResult = false
     @State private var video = AVPlayer()
-    @State private var videoURL = URL(string: "")
+    @State private var videoURL = URL(string: "https://")
     @State private var begin = false
     @State private var finished = false
     @State private var videoExists = false
@@ -21,33 +22,35 @@ struct ContentView: View {
     @StateObject private var matcher = Matcher()
     @State private var matchFound = false
 
+    @State private var play: Bool = true
+    @State private var time: CMTime = .zero
+
+    @State private var videoSize: CGSize = UIScreen.main.bounds.size
+
+    fileprivate func extractedFunc() -> some View {
+        return NewVideoPlayer(url: self.videoURL, play: $play, time: $time)
+            .autoReplay(true)
+            .aspectRatio(CGSize(width: videoSize.width, height: videoSize.height), contentMode: .fill)
+            .edgesIgnoringSafeArea(.all)
+            .onChange(of: videoURL) { newVideo in
+                if newVideo?.absoluteString != "https://" {
+                    print("videoSize:: \(self.videoSize)")
+                }
+            }
+    }
+    
     var body: some View {
         ZStack {
-//            PlayerViewController(player: self.video)
-//            PlayerViewController(videoURL: self.videoURL)
-            PlayerViewController(player: self.video, videoURL: self.videoURL)
-                .onAppear() {
-                    // Start the player going, otherwise controls don't appear
-//                    videoExists = true
-                    video.play()
-                }
-                .onDisappear() {
-                    // Stop the player when the view disappears
-//                    videoExists = false
-                    video.pause()
-                }
-                .opacity(videoExists == true ? 1 : 0)
-                .frame(minWidth: 0, maxWidth: .infinity)
-                .edgesIgnoringSafeArea(.all)
+            extractedFunc()
 
             VStack {
-                if videoURL == nil || videoURL?.absoluteString == "" {} else {
+                if videoURL == nil || videoURL?.absoluteString == "https://" {} else {
                     HStack {
                         Spacer()
                         
                         Button(action: {
                             video = AVPlayer()
-                            videoURL = URL(string: "")
+                            videoURL = URL(string: "https://")
                             videoExists = false
                             print("Video Exist:: false")
                         }) {
@@ -61,14 +64,14 @@ struct ContentView: View {
                 Spacer()
 
                 Button(action: {
-                    if videoURL == nil || videoURL?.absoluteString == "" {
+                    if videoURL == nil || videoURL?.absoluteString == "https://" {
                         self.isShowPhotoLibrary = true
                     } else {
                         self.shouldShowIdentificationResult = true
                     }
                 }) {
                     HStack {
-                        if videoURL == nil || videoURL?.absoluteString == "" {
+                        if videoURL == nil || videoURL?.absoluteString == "https://" {
                             Image(systemName: "video.fill")
                                 .font(.system(size: 20))
                             
@@ -89,10 +92,12 @@ struct ContentView: View {
                     .padding(.all)
                 }
             }
+            .frame(maxWidth: UIScreen.main.bounds.size.width, maxHeight: UIScreen.main.bounds.size.height, alignment: .center)
+            .layoutPriority(1)
         }
         .onChange(of: videoURL) { newVideo in
             guard let newVideo = newVideo else { return }
-            if newVideo.absoluteString != "" {
+            if newVideo.absoluteString != "https://" {
                 videoExists = true
                 print("Video Exist:: true")
             } else {
@@ -113,7 +118,7 @@ struct ContentView: View {
             self.matchFound = true
         }
         .sheet(isPresented: $isShowPhotoLibrary) {
-            VideoPicker(selectedVideo: $video, selectedVideoURL: $videoURL, sourceType: .photoLibrary)
+            VideoPicker(selectedVideo: $video, selectedVideoURL: $videoURL, naturalSize: $videoSize, sourceType: .photoLibrary)
         }
         .sheet(isPresented: $shouldShowIdentificationResult) {
             IdentificationResult(matchFound: $matchFound)

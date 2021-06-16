@@ -17,6 +17,7 @@
 		E936A18526750E3400810769 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E936A17526750E3300810769 /* ContentView.swift */; };
 		E936A18626750E3400810769 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E936A17626750E3400810769 /* Assets.xcassets */; };
 		E936A18726750E3400810769 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E936A17626750E3400810769 /* Assets.xcassets */; };
+		E944B123267AB4B90016D26C /* VideoPlayerView in Frameworks */ = {isa = PBXBuildFile; productRef = E944B122267AB4B90016D26C /* VideoPlayerView */; };
 		E98F5F8E267602920086CA6B /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98F5F8D267602920086CA6B /* PlayerView.swift */; };
 		E98F5F8F267602920086CA6B /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98F5F8D267602920086CA6B /* PlayerView.swift */; };
 		E9B7F63D26766D4B00834311 /* ShazamKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9B7F63B26766D4800834311 /* ShazamKit.framework */; };
@@ -24,6 +25,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E917D968267AB1F2004CC93D /* VideoPlayer */ = {isa = PBXFileReference; lastKnownFileType = folder; name = VideoPlayer; path = ../VideoPlayer; sourceTree = "<group>"; };
+		E917D969267AB205004CC93D /* VideoPlayer */ = {isa = PBXFileReference; lastKnownFileType = folder; name = VideoPlayer; path = ../VideoPlayer; sourceTree = "<group>"; };
 		E934758726761EDC005F9BD7 /* VideoPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPicker.swift; sourceTree = "<group>"; };
 		E934758A2676243F005F9BD7 /* IdentificationResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentificationResult.swift; sourceTree = "<group>"; };
 		E936A17426750E3300810769 /* PastPlayApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastPlayApp.swift; sourceTree = "<group>"; };
@@ -41,6 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E944B123267AB4B90016D26C /* VideoPlayerView in Frameworks */,
 				E9F9C4602675426700636306 /* AudioToolbox.framework in Frameworks */,
 				E9B7F63D26766D4B00834311 /* ShazamKit.framework in Frameworks */,
 			);
@@ -56,9 +60,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E917D967267AB1F2004CC93D /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				E917D968267AB1F2004CC93D /* VideoPlayer */,
+				E917D969267AB205004CC93D /* VideoPlayer */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
 		E936A16E26750E3200810769 = {
 			isa = PBXGroup;
 			children = (
+				E917D967267AB1F2004CC93D /* Packages */,
 				E936A17326750E3300810769 /* Shared */,
 				E936A17C26750E3400810769 /* Products */,
 				E9F9C45E2675426700636306 /* Frameworks */,
@@ -112,6 +126,9 @@
 			dependencies = (
 			);
 			name = "PastPlay (iOS)";
+			packageProductDependencies = (
+				E944B122267AB4B90016D26C /* VideoPlayerView */,
+			);
 			productName = "PastPlay (iOS)";
 			productReference = E936A17B26750E3400810769 /* PastPlay.app */;
 			productType = "com.apple.product-type.application";
@@ -160,6 +177,9 @@
 				Base,
 			);
 			mainGroup = E936A16E26750E3200810769;
+			packageReferences = (
+				E944B121267AB4B90016D26C /* XCRemoteSwiftPackageReference "VideoPlayer" */,
+			);
 			productRefGroup = E936A17C26750E3400810769 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -345,7 +365,7 @@
 				INFOPLIST_KEY_CFBundleVersion = 1;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = NO;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -382,7 +402,7 @@
 				INFOPLIST_KEY_CFBundleVersion = 1;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = NO;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -492,6 +512,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E944B121267AB4B90016D26C /* XCRemoteSwiftPackageReference "VideoPlayer" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lgariv/VideoPlayer";
+			requirement = {
+				kind = revision;
+				revision = 453b8efb7097443b8acf14394829c582a4ecd5fc;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E944B122267AB4B90016D26C /* VideoPlayerView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E944B121267AB4B90016D26C /* XCRemoteSwiftPackageReference "VideoPlayer" */;
+			productName = VideoPlayerView;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E936A16F26750E3200810769 /* Project object */;
 }
